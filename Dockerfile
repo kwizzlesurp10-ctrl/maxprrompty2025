@@ -42,5 +42,4 @@ EXPOSE 8080
 USER nodejs
 
 # Define the command to start your application
-# Try npm start first, then fall back to node index.js
-CMD ["sh", "-c", "if [ -f package.json ] && grep -q '\"start\"' package.json; then npm start; else node index.js; fi"]
+CMD ["node", "index.js"]
