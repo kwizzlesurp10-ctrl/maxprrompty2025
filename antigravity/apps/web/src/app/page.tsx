@@ -8,14 +8,14 @@ export default function HomePage() {
       <header className="space-y-4">
         <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Google Antigravity</p>
         <h1 className="text-5xl font-semibold text-white">Planet-scale spatial runtime</h1>
-        <p className="text-xl text-slate-300">
+        <p className="text-xl text-slate-300 leading-relaxed max-w-3xl">
           Zero-lag multiplayer, persistent CRDT worlds, and autonomous agent swarms deployed in under 3 minutes.
         </p>
         <div className="flex gap-3">
-          <Link className="rounded-full bg-antigravity-primary px-6 py-2 font-medium text-black" href="/world">
+          <Link className="rounded-full bg-antigravity-primary px-6 py-2 font-medium text-black transition-opacity hover:opacity-90" href="/world">
             Enter Earth-001
           </Link>
-          <a className="rounded-full border border-white/30 px-6 py-2" href="https://fly.io/dashboard" target="_blank" rel="noreferrer">
+          <a className="rounded-full border border-white/30 px-6 py-2 transition-colors hover:border-white/50 hover:bg-white/5" href="https://fly.io/dashboard" target="_blank" rel="noopener noreferrer">
             Launch Fly global mesh
           </a>
         </div>

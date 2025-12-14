@@ -7,8 +7,7 @@ const envSchema = z.object({
   ANTIGRAVITY_PROJECT: z.string().default("antigravity-2025-keith")
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const processEnv = (typeof process !== "undefined" ? process.env : {}) as any;
+const processEnv = (typeof process !== "undefined" ? process.env : {}) as Record<string, string | undefined>;
 
 export const env = envSchema.parse({
   NEXT_PUBLIC_SUPABASE_URL: processEnv.NEXT_PUBLIC_SUPABASE_URL,

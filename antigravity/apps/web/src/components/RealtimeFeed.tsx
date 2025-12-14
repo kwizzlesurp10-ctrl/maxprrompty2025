@@ -6,11 +6,11 @@ import { useAgentSwarm } from "@antigravity/ai-agents";
 
 export function RealtimeFeed() {
   const swarm = useAgentSwarm();
-  const [events, setEvents] = useState<string[]>([]);
+  const [events, setEvents] = useState<Array<{ id: string; message: string; timestamp: number }>>([]);
 
   useEffect(() => {
-    const unsubscribe = swarm.on("activity", (payload) => {
-      setEvents((prev) => [payload.message, ...prev].slice(0, 5));
+    const unsubscribe = swarm.onActivity((payload) => {
+      setEvents((prev) => [{ id: `${payload.timestamp}-${Math.random()}`, message: payload.message, timestamp: payload.timestamp }, ...prev].slice(0, 5));
     });
 
     return unsubscribe;
@@ -29,9 +29,9 @@ export function RealtimeFeed() {
       </header>
       <ul className="space-y-2 text-sm text-slate-300">
         {events.length === 0 && <li>No activity yet. Agents syncing…</li>}
-        {events.map((event, idx) => (
-          <li key={idx} className="rounded-xl bg-black/40 px-4 py-2">
-            {event}
+        {events.map((event) => (
+          <li key={event.id} className="rounded-xl bg-black/40 px-4 py-2">
+            {event.message}
           </li>
         ))}
       </ul>

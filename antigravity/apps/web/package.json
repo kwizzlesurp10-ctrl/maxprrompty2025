@@ -7,8 +7,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "test": "vitest"
+    "lint": "eslint \"src/**/*.{ts,tsx}\"",
+    "test": "vitest --passWithNoTests"
   },
   "dependencies": {
     "@antigravity/ai-agents": "workspace:*",
@@ -20,11 +20,17 @@
     "react": "^19.0.0-rc",
     "react-dom": "^19.0.0-rc",
     "tailwindcss": "^3.4.0",
+    "y-websocket": "^1.5.0",
+    "yjs": "^13.6.10",
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.3",
+    "@eslint/js": "^9.17.0",
     "@types/node": "^20.14.0",
     "@types/react": "^18.3.5",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.12.0",
     "eslint-config-next": "^15.0.0-canary",
     "postcss": "^8.4.38",
     "vitest": "^2.1.0"

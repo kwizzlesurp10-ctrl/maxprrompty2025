@@ -33,7 +33,7 @@ function Scene() {
   const upsert = useSpatialStore((state) => state.upsert);
 
   useEffect(() => {
-    const unsubscribe = ag.realtime?.subscribe?.("objects", (updates: unknown[]) => {
+    const subscription = ag.realtime?.subscribe?.("objects", (updates: unknown[]) => {
       for (const update of updates) {
         const parsed = realtimeUpdateSchema.parse(update);
         upsert({
@@ -46,7 +46,7 @@ function Scene() {
     });
 
     return () => {
-      unsubscribe?.();
+      subscription?.unsubscribe();
     };
   }, [upsert]);
 

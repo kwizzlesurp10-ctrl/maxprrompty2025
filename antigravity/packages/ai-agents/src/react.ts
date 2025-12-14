@@ -24,10 +24,13 @@ export function useAgentSwarm(config?: Partial<AgentSwarmConfig>) {
 
   useEffect(() => {
     const unsubscribe = swarm.onActivity(() => setTick((t) => t + 1));
-    return () => unsubscribe();
+    return unsubscribe;
   }, [swarm]);
 
-  return { ...swarm, tick } as AgentSwarm & { tick: number };
+  // Return the swarm instance directly with tick added as a property
+  // This preserves all prototype methods including onActivity
+  (swarm as AgentSwarm & { tick: number }).tick = tick;
+  return swarm as AgentSwarm & { tick: number };
 }
 
 export { AgentSwarm } from "./swarm";

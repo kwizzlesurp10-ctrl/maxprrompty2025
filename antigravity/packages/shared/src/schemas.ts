@@ -13,5 +13,5 @@ export const agentRolesSchema = z.array(z.string());
 export const realtimeUpdateSchema = z.object({
   objectId: z.string(),
   position: z.tuple([z.number(), z.number(), z.number()]),
-  scale: z.number().positive()
+  scale: z.number().min(0)
 });

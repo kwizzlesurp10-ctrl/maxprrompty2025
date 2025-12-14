@@ -7,8 +7,8 @@ export function WorldRealtimePanel() {
   const [ag, setAg] = useState<AntiGravity | null>(null);
   const [objectCount, setObjectCount] = useState(0);
   const [isConnected, setIsConnected] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [objectIds, setObjectIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const client = new AntiGravity({
@@ -24,26 +24,48 @@ export function WorldRealtimePanel() {
         spawn: [44.9778, -93.265, 500],
       });
 
+      // Listen for connection status changes
+      const unsubscribeStatus = client.onConnectionStatusChange((connected) => {
+        setIsConnected(connected);
+        setIsConnecting(false);
+        if (connected) {
+          setError(null);
+        } else {
+          // If disconnected, check if we're trying to reconnect
+          const status = client.getConnectionStatus();
+          setIsConnecting(status === "connecting");
+        }
+      });
+
+      // Check initial connection status
+      const initialStatus = client.getConnectionStatus();
+      setIsConnecting(initialStatus === "connecting");
+      setIsConnected(initialStatus === "connected");
+
+      // Periodic check to ensure status stays in sync (handles edge cases)
+      const statusCheckInterval = setInterval(() => {
+        const status = client.getConnectionStatus();
+        setIsConnecting(status === "connecting");
+        setIsConnected(status === "connected");
+      }, 1000);
+
+      const objectIds = new Set<string>();
       const unsubscribe = client.realtime.subscribe("objects", (updates) => {
-        setObjectIds((prev) => {
-          const next = new Set(prev);
-          updates.forEach((update) => {
-            if (update.scale > 0) {
-              next.add(update.objectId);
-            } else {
-              next.delete(update.objectId);
-            }
-          });
-          setObjectCount(next.size);
-          return next;
+        updates.forEach((update) => {
+          if (update.scale > 0) {
+            objectIds.add(update.objectId);
+          } else {
+            objectIds.delete(update.objectId);
+          }
         });
-        setIsConnected(true);
+        setObjectCount(objectIds.size);
       });
 
       setAg(client);
-      setIsConnected(true);
 
       return () => {
+        clearInterval(statusCheckInterval);
+        unsubscribeStatus();
         unsubscribe.unsubscribe();
         client.destroy();
       };
@@ -79,12 +101,16 @@ export function WorldRealtimePanel() {
         </div>
         <div className="flex items-center gap-2">
           <div
-            className={`h-3 w-3 rounded-full ${
-              isConnected ? "bg-green-500" : "bg-red-500"
+            className={`h-3 w-3 rounded-full transition-colors ${
+              isConnected
+                ? "bg-green-500"
+                : isConnecting
+                ? "bg-yellow-500 animate-pulse"
+                : "bg-red-500"
             }`}
           />
           <span className="text-sm text-slate-400">
-            {isConnected ? "Connected" : "Disconnected"}
+            {isConnected ? "Connected" : isConnecting ? "Connecting..." : "Disconnected"}
           </span>
         </div>
       </header>
@@ -97,10 +123,10 @@ export function WorldRealtimePanel() {
 
       <button
         onClick={handleSpawnCube}
-        disabled={!ag || !isConnected}
-        className="w-full rounded-full bg-antigravity-accent px-6 py-3 text-black disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled={!ag || !isConnected || isConnecting}
+        className="w-full rounded-full bg-antigravity-accent px-6 py-3 text-black disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
       >
-        Spawn Cube
+        {isConnecting ? "Connecting..." : "Spawn Cube"}
       </button>
     </article>
   );

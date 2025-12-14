@@ -1,7 +1,8 @@
 variable "fly_api_token" {
   type        = string
-  description = "Fly.io access token"
+  description = "Fly.io access token (optional if FLY_API_TOKEN env var is set)"
   sensitive   = true
+  default     = null
 }
 
 variable "fly_app_name" {
@@ -18,13 +19,14 @@ variable "fly_org" {
 
 variable "cloudflare_api_token" {
   type        = string
-  description = "Cloudflare API token"
+  description = "Cloudflare API token (optional if CLOUDFLARE_API_TOKEN env var is set)"
   sensitive   = true
+  default     = null
 }
 
 variable "cloudflare_account_id" {
   type        = string
-  description = "Cloudflare account ID"
+  description = "Cloudflare account ID (can be set via TF_VAR_cloudflare_account_id env var)"
 }
 
 variable "r2_bucket" {

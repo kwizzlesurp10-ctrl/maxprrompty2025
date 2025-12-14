@@ -41,7 +41,9 @@ function useSpatialStoreApi() {
   return store;
 }
 
-export function useSpatialStore<T>(selector?: (state: SpatialState) => T): T | SpatialState {
+export function useSpatialStore(): SpatialState;
+export function useSpatialStore<T>(selector: (state: SpatialState) => T): T;
+export function useSpatialStore<T>(selector?: (state: SpatialState) => T) {
   const store = useSpatialStoreApi();
   return useStore(store, selector ?? ((state) => state));
 }

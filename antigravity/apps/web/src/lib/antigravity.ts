@@ -1,3 +1,5 @@
+"use client";
+
 import { AntiGravity } from "@google/antigravity/core";
 
 export const ag = new AntiGravity({

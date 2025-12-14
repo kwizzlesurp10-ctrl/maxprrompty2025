@@ -1,5 +1,6 @@
 import * as Y from "yjs";
 import { WebsocketProvider } from "y-websocket";
+import IsomorphicWebSocket from "isomorphic-ws";
 import { z } from "zod";
 
 const configSchema = z.object({
@@ -68,9 +69,12 @@ export class AntiGravity {
     
     // WebsocketProvider expects the room name as the second param
     // The URL should be the base WebSocket server URL
-    this.provider = new WebsocketProvider(wsUrl, worldId, this.doc, {
-      connect: true,
-    });
+    const providerOptions =
+      typeof window === "undefined" && typeof globalThis.WebSocket === "undefined"
+        ? { connect: true, WebSocketPolyfill: IsomorphicWebSocket as unknown as typeof WebSocket }
+        : { connect: true };
+
+    this.provider = new WebsocketProvider(wsUrl, worldId, this.doc, providerOptions);
 
     // Log spawn position if provided
     if (options?.spawn) {
@@ -168,6 +172,83 @@ export class AntiGravity {
     this.objectsMap.set(payload.id, payload);
 
     return payload;
+  }
+
+  isConnected(): boolean {
+    if (!this.provider) {
+      return false;
+    }
+    // WebsocketProvider status: 0 = connecting, 1 = connected
+    const ws = (this.provider as any).ws;
+    return this.provider.shouldConnect && ws?.readyState === WebSocket.OPEN;
+  }
+
+  getConnectionStatus(): "disconnected" | "connecting" | "connected" {
+    if (!this.provider) {
+      return "disconnected";
+    }
+    const ws = (this.provider as any).ws;
+    if (!ws) {
+      return "disconnected";
+    }
+    if (ws.readyState === WebSocket.CONNECTING) {
+      return "connecting";
+    }
+    if (ws.readyState === WebSocket.OPEN) {
+      return "connected";
+    }
+    return "disconnected";
+  }
+
+  onConnectionStatusChange(callback: (connected: boolean) => void): () => void {
+    if (!this.provider) {
+      return () => {};
+    }
+
+    const handleStatus = (event: { status: number }) => {
+      // status 0 = connecting, 1 = connected
+      const connected = event.status === 1;
+      callback(connected);
+    };
+
+    // Also listen for WebSocket close/error events for immediate feedback
+    const ws = (this.provider as any).ws;
+    const handleClose = () => {
+      callback(false);
+    };
+    const handleOpen = () => {
+      callback(true);
+    };
+    const handleError = () => {
+      callback(false);
+    };
+
+    this.provider.on("status", handleStatus);
+    
+    if (ws) {
+      ws.addEventListener("close", handleClose);
+      ws.addEventListener("open", handleOpen);
+      ws.addEventListener("error", handleError);
+    }
+
+    // Check initial status
+    callback(this.isConnected());
+
+    return () => {
+      if (this.provider) {
+        // WebsocketProvider extends EventEmitter, supports both off and removeListener
+        if (typeof (this.provider as any).off === "function") {
+          (this.provider as any).off("status", handleStatus);
+        } else if (typeof (this.provider as any).removeListener === "function") {
+          (this.provider as any).removeListener("status", handleStatus);
+        }
+      }
+      if (ws) {
+        ws.removeEventListener("close", handleClose);
+        ws.removeEventListener("open", handleOpen);
+        ws.removeEventListener("error", handleError);
+      }
+    };
   }
 
   destroy(): void {

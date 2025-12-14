@@ -18,15 +18,18 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsc -w -p tsconfig.json",
-    "test": "vitest"
+    "test": "vitest --passWithNoTests"
   },
   "dependencies": {
     "@antigravity/shared": "workspace:*",
-    "yjs": "^13.6.10",
+    "isomorphic-ws": "^5.0.0",
+    "ws": "^8.18.0",
     "y-websocket": "^1.5.0",
+    "yjs": "^13.6.10",
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/node": "^20.0.0",
     "typescript": "^5.5.4",
     "vitest": "^2.1.0"
   }

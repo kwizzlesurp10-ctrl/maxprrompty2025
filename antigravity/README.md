@@ -12,10 +12,13 @@ This monorepo is a deploy-ready blueprint for the **Google Antigravity** runtime
 ## Getting Started
 ```bash
 pnpm install
-pnpm dev        # turbo dev across apps
+pnpm dev              # dev across all apps
+pnpm dev:turbo        # dev with Next.js Turbopack (web only)
 pnpm --filter web dev      # start Next.js (port 3000)
 pnpm --filter spatial dev  # start Vite spatial host (port 4173) + realtime server (port 8787)
 ```
+
+**Note**: To pass arguments through Turbo to underlying tasks, use: `pnpm dev -- --turbopack` (the `--` separates Turbo args from task args)
 
 ### Ports
 - **web**: `http://localhost:3000` (Next.js App Router)
