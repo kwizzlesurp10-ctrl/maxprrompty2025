@@ -5,13 +5,14 @@ FROM node:20-alpine AS build
 WORKDIR /usr/src/app
 
 # Copy package.json explicitly (not using wildcard to catch errors early)
-COPY package.json ./
+# This will fail if package.json doesn't exist in build context
+COPY package.json ./package.json
+
+# Immediately verify package.json exists (breaks cache if missing)
+RUN test -f package.json || (echo "ERROR: package.json not found after COPY! Build context may be incorrect." && ls -la /usr/src/app && exit 1)
 
 # Copy package-lock.json if it exists (optional, won't fail if missing)
 COPY package-lock.json* ./
-
-# Verify package.json was copied successfully
-RUN test -f package.json || (echo "ERROR: package.json not found! Build context may be incorrect." && ls -la && exit 1)
 
 # Install dependencies
 RUN npm ci --only=production || npm install --production
