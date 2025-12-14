@@ -1,0 +1,13 @@
+app = "antigravity-keith"
+primary_region = "ord"
+kill_signal = "SIGINT"
+kill_timeout = 5
+
+[env]
+  ANTIGRAVITY_PROJECT = "antigravity-2025-keith"
+
+[[vm]]
+  cpu_kind = "performance"
+  cpus = 8
+  memory_mb = 32768
+  regions = ["ord", "iad", "lhr", "nrt", "syd", "gru"]

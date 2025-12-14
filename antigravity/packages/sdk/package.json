@@ -1,0 +1,33 @@
+{
+  "name": "@google/antigravity",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "default": "./dist/core/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -w -p tsconfig.json",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@antigravity/shared": "workspace:*",
+    "yjs": "^13.6.10",
+    "y-websocket": "^1.5.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "vitest": "^2.1.0"
+  }
+}

@@ -1,0 +1,10 @@
+[project]
+id = "antigravity-2025-keith"
+api_url = "https://keith-antigravity.supabase.co"
+
+[database]
+version = 15
+pooling_mode = "transaction"
+
+[studio]
+port = 54322

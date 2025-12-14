@@ -1,0 +1,12 @@
+node_modules
+.pnpm-store
+.turbo
+.next
+out
+build
+dist
+.env*
+.vercel
+.fly
+supabase/.temp
+.DS_Store

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "@antigravity/shared": ["packages/shared/src"],
+      "@antigravity/sdk": ["packages/sdk/src"],
+      "@antigravity/ai-agents": ["packages/ai-agents/src"],
+      "@google/antigravity": ["packages/sdk/src"],
+      "@google/antigravity/*": ["packages/sdk/src/*"],
+      "@/lib/*": ["apps/web/src/lib/*"],
+      "@/components/*": ["apps/web/src/components/*"]
+    }
+  },
+  "include": ["packages", "apps"],
+  "exclude": ["node_modules", "dist", "build"]
+}

@@ -1,0 +1,41 @@
+{
+  "name": "spatial",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"pnpm:dev:*\"",
+    "dev:vite": "vite",
+    "dev:realtime": "tsx watch src/realtime/server.ts",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint \"src/**/*.{ts,tsx}\"",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@antigravity/ai-agents": "workspace:*",
+    "@antigravity/shared": "workspace:*",
+    "@google/antigravity": "workspace:*",
+    "@react-three/fiber": "^9.0.0",
+    "@react-three/rapier": "^1.5.0",
+    "react": "^19.0.0-rc",
+    "react-dom": "^19.0.0-rc",
+    "three": "^0.167.0",
+    "ws": "^8.18.0",
+    "y-websocket": "^1.5.0",
+    "yjs": "^13.6.10",
+    "zustand": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "concurrently": "^9.1.0",
+    "eslint": "^9.12.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.0",
+    "vitest": "^2.1.0"
+  }
+}
