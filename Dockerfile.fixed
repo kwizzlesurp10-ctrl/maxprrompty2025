@@ -32,7 +32,15 @@ RUN addgroup -g 1001 -S nodejs && \
 # Copy the node_modules and application files from the 'build' stage
 COPY --from=build --chown=nodejs:nodejs /usr/src/app/node_modules ./node_modules
 COPY --from=build --chown=nodejs:nodejs /usr/src/app/package*.json ./
+
+# Verify package.json exists in the final image root
+RUN test -f package.json || (echo "ERROR: package.json not found in final image root!" && ls -la && exit 1)
+
+# Copy the rest of the application files
 COPY --from=build --chown=nodejs:nodejs /usr/src/app .
+
+# Verify package.json still exists after copying everything
+RUN test -f package.json || (echo "ERROR: package.json missing after final copy!" && ls -la && exit 1)
 
 # Expose the port your app runs on
 ENV PORT=8080
