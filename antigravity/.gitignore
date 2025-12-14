@@ -10,3 +10,7 @@ dist
 .fly
 supabase/.temp
 .DS_Store
+.terraform
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
